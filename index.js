@@ -1,4 +1,4 @@
-// Declaro de variables
+// Declaro variables
 let dinero = 0;
 let opcionTransferencia = 0;
 let transferencia = 1;
@@ -6,7 +6,19 @@ let i=0
 let salir = false;
 let cero = "Ingresa 0 para salir.";
 let s = `Ingresa S para salir.`;
-//Declaro de funciones
+//Declaro los arrays, objetos y clases
+class movimiento {
+    dineroM;
+    transaccion;
+    mensaje;
+    constructor (dineroM, transaccion) {
+        this.dineroM = dineroM;
+        this.transaccion = transaccion;
+        this.mensaje = `${transaccion} de ${dineroM}`;
+    }
+}
+const historial = [];
+//Declaro funciones
 function potencia (tipo, num1, num2){
     if (tipo == "raiz"){
         num2 = num2 **-1;
@@ -69,8 +81,11 @@ while(salir!=true) {
                 (${cero})`));
                 if (ingreso < 0) {
                     alert (`¡No puedes retirar dinero aquí!`)
-                }else {
+                }else if (ingreso > 0){
                     dinero = numeroCalculo(dinero, ingreso);
+                    let movimientoNuevo = new movimiento (ingreso, "INGRESO");
+                    let mensajeFinal = movimientoNuevo.mensaje;
+                    historial.unshift (mensajeFinal);
                 }
             }
             if (ingreso==0) {
@@ -87,6 +102,9 @@ while(salir!=true) {
                     alert (`ERROR. No puedes retirar números negativos.`)
                 }else if (egreso < dinero){
                     dinero = numeroCalculo (dinero, -egreso);
+                    let movimientoNuevo = new movimiento (egreso, "RETIRO");
+                    let mensajeFinal = movimientoNuevo.mensaje;
+                    historial.unshift (mensajeFinal);
                 } else sinDinero(egreso, dinero, "retirar");
             }
             if (egreso==0) {
@@ -97,8 +115,9 @@ while(salir!=true) {
             i = parseInt(prompt (`Elija una opción:
             0. <--Atrás
             4. Transferir dinero
-            5. Calculadora personal 
-            6. Siguiente-->`));
+            5. Historial de transacciones
+            6. Calculadora personal 
+            7. Siguiente-->`));
         break;
         case 4:
             let salirtransf = false;
@@ -126,13 +145,16 @@ while(salir!=true) {
                                 opcionTransferencia = 0;
                             }else if (transferencia < dinero) {
                                 numeroCalculo(dinero, -transferencia);
+                                let movimientoNuevo = new movimiento (transferencia, "TRANSFERENCIA");
+                                let mensajeFinal = movimientoNuevo.mensaje;
+                                historial.unshift (mensajeFinal);
                                 alert (`Has transferido $${transferencia} a la persona con CBU:${cbu}`);
                                 opcionTransferencia = 0;
                             } else sinDinero(transferencia, dinero, "enviar");
                         }
                     break;
                     case 2:
-                        let alias = prompt(`Ingrese CBU
+                        let alias = prompt(`Ingrese alias
                         (${cero})`);
                         if (alias == 0) {
                             opcionTransferencia = 0;
@@ -144,6 +166,10 @@ while(salir!=true) {
                                 opcionTransferencia = 0;
                             }else if (transferencia < dinero) {
                                 numeroCalculo(dinero, -transferencia);
+                                let movimientoNuevo = new movimiento (transferencia, "TRANSFERENCIA");
+                                let mensajeFinal = movimientoNuevo.mensaje;
+                                historial.unshift (mensajeFinal);
+                                console.log (movimientoNuevo.mensaje);
                                 alert (`Has transferido $${transferencia} a la persona con alias: ${alias}`);
                             }else sinDinero(transferencia, dinero, `enviar`);
                         }
@@ -160,6 +186,20 @@ while(salir!=true) {
             }
         break;
         case 5:
+            let salir = false;
+            alert("ALERTA. Con los elementos dados hasta el momento, cada movimiento del historial va a ser dado individualmente en un alert cada uno. DESDE YA MUCHAS GRACIAS")
+            while (salir == false) {
+                historial.forEach(movimiento => alert(movimiento));
+                salirHist = parseFloat(prompt("Ingrese 0 si quiere salir, sino toque cualquier tecla"));
+                if(salirHist == 0) {
+                    salir = true;
+                }else {
+                    salir = false;
+                }
+            }
+            alert ("¡Gracias por ver nuestro historial!");
+        break;
+        case 6:
             let salirCalc = false;
             let opcion=0;
             let resultado=0;
@@ -306,15 +346,15 @@ while(salir!=true) {
                 i = 3;
             }
         break;
-        case 6:
+        case 7:
             i = parseInt(prompt (`Elija una opción:
             0. <--Atrás
-            7. Conversor de moneda`));
+            8. Conversor de moneda`));
             if (i== 0) {
                 i = 3;
             }
         break;
-        case 7:
+        case 8:
             let opcionConv = 0;
             let salirConv = false;
             while (salirConv != true) {
